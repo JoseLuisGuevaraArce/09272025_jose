@@ -11,7 +11,7 @@ RUN npm install
 COPY . .
 
 # Generar la build de Angular
-RUN npm run build --prod
+RUN npm run build
 
 # Etapa 2: Servir con Nginx
 FROM nginx:alpine
