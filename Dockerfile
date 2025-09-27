@@ -20,7 +20,7 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copia la build de Angular a la carpeta de Nginx
-COPY --from=build /app/dist/angularbasic /usr/share/nginx/html
+COPY --from=build /app/dist/angularbasic/browser /usr/share/nginx/html
 
 # Copia un archivo de configuración de Nginx (opcional)
 # COPY nginx.conf /etc/nginx/conf.d/default.conf
