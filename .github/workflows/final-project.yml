@@ -35,7 +35,7 @@ jobs:
         run: docker run -d -p 8080:80 --name angularapp ${{ secrets.DOCKER_USERNAME }}/angularbasic:latest
 
       - name: Wait for container to start
-        shell: pwsh
+        shell: powershell
         run: |
           $timeout = [datetime]::Now.AddSeconds(30)
           while ([datetime]::Now -lt $timeout) {
