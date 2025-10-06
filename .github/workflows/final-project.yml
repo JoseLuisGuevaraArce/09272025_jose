@@ -52,16 +52,16 @@ jobs:
           }
 
       - name: Test my container response
-        shell: bash
+        shell: powershell
         run: |
-          response=$(curl -s http://localhost:8080)
-          echo "Response: $response"
-          if [[ "$response" == *"Hello"* || "$response" == *"Angular"* ]]; then
-            echo "Container responded successfully"
-          else
-            echo "Test failed: unexpected response"
+          $response = Invoke-WebRequest -Uri http://localhost:8080 -UseBasicParsing
+          Write-Host "Response: $($response.Content)"
+          if ($response.Content -like "*Hello*" -or $response.Content -like "*Angular*") {
+            Write-Host "Container responded successfully"
+          } else {
+            Write-Host "Test failed: unexpected response"
             exit 1
-          fi
+          }
 
       - name: Stop and remove container
         if: always()
