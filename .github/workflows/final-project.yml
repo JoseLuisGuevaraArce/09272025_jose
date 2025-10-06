@@ -77,9 +77,16 @@ jobs:
 
       - name: Save container logs
         if: always()
-        run: docker logs angularapp > logs.txt
+        shell: powershell
+        run: |
+          if (docker ps -a --format '{{.Names}}' | Select-String -Pattern '^angularapp$') {
+            docker logs angularapp | Out-File -FilePath logs.txt -Encoding utf8
+          } else {
+            "Container 'angularapp' does not exist. No logs available." | Out-File -FilePath logs.txt -Encoding utf8
+          }
 
       - name: Upload logs as artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: container-logs
