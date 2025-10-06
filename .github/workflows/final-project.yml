@@ -43,3 +43,9 @@ jobs:
             echo "❌ Test failed: unexpected response"
             exit 1
           fi
+
+      - name: Stop and remove container
+        if: always()
+        run: |
+          docker stop angularapp || true
+          docker rm angularapp || true
