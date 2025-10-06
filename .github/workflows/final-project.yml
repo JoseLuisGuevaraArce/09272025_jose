@@ -35,7 +35,21 @@ jobs:
         run: docker run -d -p 8080:80 --name angularapp ${{ secrets.DOCKER_USERNAME }}/angularbasic:latest
 
       - name: Wait for container to start
-        run: timeout 30 bash -c "until curl -s http://localhost:8080 > /dev/null; do echo 'Waiting...'; sleep 2; done"
+        shell: pwsh
+        run: |
+          $timeout = [datetime]::Now.AddSeconds(30)
+          while ([datetime]::Now -lt $timeout) {
+            try {
+              $response = Invoke-WebRequest -Uri http://localhost:8080 -UseBasicParsing -TimeoutSec 5 -ErrorAction Stop
+              if ($response.StatusCode -eq 200) {
+                Write-Host "Container is up!"
+                break
+              }
+            } catch {
+              Write-Host "Waiting..."
+            }
+            Start-Sleep -Seconds 2
+          }
 
       - name: Test my container response
         run: |
