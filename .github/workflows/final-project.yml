@@ -28,8 +28,13 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/angularbasic:latest
 
       - name: Clean up old container (if exists)
+        shell: powershell
         run: |
-          docker rm -f angularapp 2>$null
+          try {
+            docker rm -f angularapp | Out-Null
+          } catch {
+            Write-Host "Container 'angularapp' does not exist or could not be removed. Continuing..."
+          }
 
       - name: Running container
         run: docker run -d -p 8080:80 --name angularapp ${{ secrets.DOCKER_USERNAME }}/angularbasic:latest
