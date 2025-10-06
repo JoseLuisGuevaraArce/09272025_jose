@@ -27,7 +27,19 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/angularbasic:latest
 
-
       - name: Running container
         run: docker run -d -p 8080:80 --name angularapp ${{ secrets.DOCKER_USERNAME }}/angularbasic:latest
 
+      - name: Wait for container to start
+        run: timeout 30 bash -c "until curl -s http://localhost:8080 > /dev/null; do echo 'Waiting...'; sleep 2; done"
+
+      - name: Test container response
+        run: |
+          response=$(curl -s http://localhost:8080)
+          echo "Response: $response"
+          if [[ "$response" == *"Hello"* || "$response" == *"Angular"* ]]; then
+            echo "✅ Container responded successfully"
+          else
+            echo "❌ Test failed: unexpected response"
+            exit 1
+          fi
