@@ -1,4 +1,4 @@
-name: Docker Angular Build
+name: Docker Angular Build - Final Project CI
 
 on:
   push:
