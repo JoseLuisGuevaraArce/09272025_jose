@@ -61,7 +61,7 @@ jobs:
         run: |
           $response = Invoke-WebRequest -Uri http://localhost:8080 -UseBasicParsing
           Write-Host "Response: $($response.Content)"
-          if ($response.Content -like "*Hello*" -or $response.Content -like "*basic*") {
+          if ($response.Content -like "*Hello, CI Pipeline!*") {
             Write-Host "Container responded successfully"
           } else {
             Write-Host "Test failed: Unexpected response"
