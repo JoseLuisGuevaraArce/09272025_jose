@@ -52,6 +52,7 @@ jobs:
           }
 
       - name: Test my container response
+        shell: bash
         run: |
           response=$(curl -s http://localhost:8080)
           echo "Response: $response"
@@ -64,6 +65,7 @@ jobs:
 
       - name: Stop and remove container
         if: always()
+        shell: powershell
         run: |
-          docker stop angularapp -ErrorAction SilentlyContinue
-          docker rm angularapp -ErrorAction SilentlyContinue
+          docker stop angularapp 2>$null
+          docker rm angularapp 2>$null
