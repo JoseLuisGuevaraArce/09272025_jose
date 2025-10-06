@@ -26,3 +26,8 @@ jobs:
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/angularbasic:latest
+
+
+      - name: Running container
+        run: docker run -d -p 8080:80 --name angularapp ${{ secrets.DOCKER_USERNAME }}/angularbasic:latest
+
