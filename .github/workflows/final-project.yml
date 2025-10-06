@@ -27,25 +27,29 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/angularbasic:latest
 
+      - name: Clean up old container (if exists)
+        run: |
+          docker rm -f angularapp 2>$null || echo "No previous container"
+
       - name: Running container
         run: docker run -d -p 8080:80 --name angularapp ${{ secrets.DOCKER_USERNAME }}/angularbasic:latest
 
       - name: Wait for container to start
         run: timeout 30 bash -c "until curl -s http://localhost:8080 > /dev/null; do echo 'Waiting...'; sleep 2; done"
 
-      - name: Test container response
+      - name: Test my container response
         run: |
           response=$(curl -s http://localhost:8080)
           echo "Response: $response"
           if [[ "$response" == *"Hello"* || "$response" == *"Angular"* ]]; then
-            echo "✅ Container responded successfully"
+            echo "Container responded successfully"
           else
-            echo "❌ Test failed: unexpected response"
+            echo "Test failed: unexpected response"
             exit 1
           fi
 
       - name: Stop and remove container
         if: always()
         run: |
-          docker stop angularapp || true
-          docker rm angularapp || true
+          docker stop angularapp -ErrorAction SilentlyContinue
+          docker rm angularapp -ErrorAction SilentlyContinue
